@@ -1,2 +1,2 @@
 # AnalisisSentimen
-Analisis sentimen berdasarkan data twitter mengenai penyakit hepatitis akut misterius menggunakan algoritma naive bayes, support vector machine, k-nearest neighbors
+Sentiment analysis based on twitter data regarding mysterious acute hepatitis disease using the naive bayes algorithm, support vector machine, k-nearest neighbors
