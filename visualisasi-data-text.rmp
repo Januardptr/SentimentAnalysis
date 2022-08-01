@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.9.003">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.9.003" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="9.9.003" expanded="true" height="68" name="Read CSV" width="90" x="45" y="34">
+        <parameter key="csv_file" value="B:/Kuliah/SKRIPSI/Analisis Sentiment Twitter/Crawling Data/Rapid/kebijakan-masker-1.csv"/>
+        <parameter key="column_separators" value=";"/>
+        <parameter key="trim_lines" value="false"/>
+        <parameter key="use_quotes" value="true"/>
+        <parameter key="quotes_character" value="&quot;"/>
+        <parameter key="escape_character" value="\"/>
+        <parameter key="skip_comments" value="false"/>
+        <parameter key="comment_characters" value="#"/>
+        <parameter key="starting_row" value="1"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="grouped_digits" value="false"/>
+        <parameter key="grouping_character" value=","/>
+        <parameter key="infinity_representation" value=""/>
+        <parameter key="date_format" value=""/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="encoding" value="SYSTEM"/>
+        <parameter key="read_all_values_as_polynominal" value="false"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="Text.true.text.attribute"/>
+          <parameter key="1" value="Id.false.real.attribute"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="replace" compatibility="9.9.003" expanded="true" height="82" name="Replace" width="90" x="179" y="34">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value="RT @.*: "/>
+      </operator>
+      <operator activated="true" class="replace" compatibility="9.9.003" expanded="true" height="82" name="Replace (2)" width="90" x="313" y="34">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="replace_what" value="http.*"/>
+      </operator>
+      <operator activated="true" class="text:process_document_from_data" compatibility="9.4.000" expanded="true" height="82" name="Process Documents from Data" width="90" x="514" y="34">
+        <parameter key="create_word_vector" value="true"/>
+        <parameter key="vector_creation" value="TF-IDF"/>
+        <parameter key="add_meta_information" value="true"/>
+        <parameter key="keep_text" value="false"/>
+        <parameter key="prune_method" value="none"/>
+        <parameter key="prune_below_percent" value="3.0"/>
+        <parameter key="prune_above_percent" value="30.0"/>
+        <parameter key="prune_below_rank" value="0.05"/>
+        <parameter key="prune_above_rank" value="0.95"/>
+        <parameter key="datamanagement" value="double_sparse_array"/>
+        <parameter key="data_management" value="auto"/>
+        <parameter key="select_attributes_and_weights" value="false"/>
+        <list key="specify_weights"/>
+        <process expanded="true">
+          <operator activated="true" class="text:tokenize" compatibility="9.4.000" expanded="true" height="68" name="Tokenize" width="90" x="45" y="34">
+            <parameter key="mode" value="non letters"/>
+            <parameter key="characters" value=".:"/>
+            <parameter key="language" value="English"/>
+            <parameter key="max_token_length" value="3"/>
+          </operator>
+          <operator activated="true" class="text:transform_cases" compatibility="9.4.000" expanded="true" height="68" name="Transform Cases" width="90" x="246" y="34">
+            <parameter key="transform_to" value="lower case"/>
+          </operator>
+          <operator activated="true" class="text:filter_stopwords_dictionary" compatibility="9.4.000" expanded="true" height="82" name="Filter Stopwords (Dictionary)" width="90" x="447" y="34">
+            <parameter key="file" value="B:/Kuliah/SKRIPSI/Analisis Sentiment Twitter/stopwordbahasa.csv"/>
+            <parameter key="case_sensitive" value="false"/>
+            <parameter key="encoding" value="SYSTEM"/>
+          </operator>
+          <operator activated="true" class="text:filter_by_length" compatibility="9.4.000" expanded="true" height="68" name="Filter Tokens (by Length)" width="90" x="648" y="34">
+            <parameter key="min_chars" value="4"/>
+            <parameter key="max_chars" value="25"/>
+          </operator>
+          <connect from_port="document" to_op="Tokenize" to_port="document"/>
+          <connect from_op="Tokenize" from_port="document" to_op="Transform Cases" to_port="document"/>
+          <connect from_op="Transform Cases" from_port="document" to_op="Filter Stopwords (Dictionary)" to_port="document"/>
+          <connect from_op="Filter Stopwords (Dictionary)" from_port="document" to_op="Filter Tokens (by Length)" to_port="document"/>
+          <connect from_op="Filter Tokens (by Length)" from_port="document" to_port="document 1"/>
+          <portSpacing port="source_document" spacing="0"/>
+          <portSpacing port="sink_document 1" spacing="0"/>
+          <portSpacing port="sink_document 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="text:wordlist_to_data" compatibility="9.4.000" expanded="true" height="82" name="WordList to Data" width="90" x="715" y="34"/>
+      <connect from_op="Read CSV" from_port="output" to_op="Replace" to_port="example set input"/>
+      <connect from_op="Replace" from_port="example set output" to_op="Replace (2)" to_port="example set input"/>
+      <connect from_op="Replace (2)" from_port="example set output" to_op="Process Documents from Data" to_port="example set"/>
+      <connect from_op="Process Documents from Data" from_port="word list" to_op="WordList to Data" to_port="word list"/>
+      <connect from_op="WordList to Data" from_port="example set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
